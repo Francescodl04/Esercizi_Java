@@ -4,4 +4,4 @@
 	<li> <b>Tester</b>: esercizi dati dall'insegnante per scoprire funzionalità di Java
 </ul>
 
-Gli altri file sono soluzioni a esercizi proposti.
+Gli altri file sono soluzioni a esercizi proposti con varianti.
