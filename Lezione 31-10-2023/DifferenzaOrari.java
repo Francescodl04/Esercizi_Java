@@ -1,4 +1,10 @@
 
+/*
+* Francesco Di Lena
+* A.A. 2023-2024 - Fondamenti di informatica
+* Esercizio di laboratorio 02-5
+*/
+
 import java.util.Scanner;
 
 public class DifferenzaOrari{
@@ -11,6 +17,7 @@ public class DifferenzaOrari{
         int ora1 = orario1/100, ora2 = orario2/100, minuti1 = orario1%100, minuti2 = orario2%100;
         System.out.println("Il primo orario e' " + FormattaOra(ora1, minuti1) + "\nIl secondo orario e' " + FormattaOra(ora2, minuti2));
         int oreTrascorse = 0, minutiTrascorsi = ContaMinuti(minuti1, minuti2);
+        //Scelgo se eseguire il calcolo di ore in due giorni diversi (primo caso), oppure due orari nello stesso giorno (tutti gli altri casi)
         if(ora1 > ora2){            
             oreTrascorse = ((24 * 60 - (ora1 * 60 + minuti1)) + (ora2 * 60 + minuti2)) / 60;
         }
@@ -18,7 +25,13 @@ public class DifferenzaOrari{
             oreTrascorse = ((ora2 * 60 + minuti2) - (ora1 * 60 + minuti1)) / 60;
         }
         System.out.println("\nLa differenza tra i due orari e': " + oreTrascorse + " ore e " + minutiTrascorsi + " minuti.");
+
+        console.close();
     }
+
+    /*
+    * La funzione seguente permette di calcolare la differenza dei minuti passati come argomento
+    */
 
     public static int ContaMinuti(int minuti1, int minuti2){
         int minutiTrascorsi;
@@ -30,6 +43,10 @@ public class DifferenzaOrari{
         }
         return minutiTrascorsi;
     }
+
+    /*
+    * La funzione seguente permette di scrivere l'ora nel formato hh:mm
+    */
 
     public static String FormattaOra(int ora, int minuto){
         String oraString = "" + ora;
