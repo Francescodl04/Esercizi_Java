@@ -16,6 +16,7 @@ public class LetturaInput2{
         System.out.println("Benvenuto nel programma (v2). Inserisci un numero intero positivo da massimo cinque cifre:");
         String numero = console.next();
         String numeroFormattato = numero;
+        // Eseguo un controllo sull'input per far rispettare i requisiti di progettazione (manca la gestione dell'eccezione nel caso in cui l'input non sia un intero)
         while(numero.length() > MAX_CIFRE || numero.length() == 0 || Integer.parseInt(numero) < MIN_NUMERO)
         {
             System.out.println("Non hai inserito un numero, hai superato le cifre consentite oppure hai inserito un numero negativo. Riprova:");
