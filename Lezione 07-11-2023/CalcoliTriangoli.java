@@ -1,6 +1,6 @@
 /*
   Francesco Di Lena
-  Esercizio di laboratorio - Fondamenti di informatica 
+  Esercizio di laboratorio esempio 1 - Fondamenti di informatica 
   07-11-2023
  */
 
@@ -27,5 +27,6 @@ public class CalcoliTriangoli{
 		System.out.printf("Area: %.2f cm^2\n", area);
 		System.out.printf("Angolo beta: %.2f\u00B0\n", beta);
 		System.out.printf("Angolo gamma: %.2f\u00B0\n", gamma);
+		console.close();
 	}
 }

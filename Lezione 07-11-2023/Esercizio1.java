@@ -1,6 +1,6 @@
 /*
   Francesco Di Lena
-  Esercizio di laboratorio - Fondamenti di informatica 
+  Esercizio di laboratorio 03-1-1 - Fondamenti di informatica 
   07-11-2023
  */
  
