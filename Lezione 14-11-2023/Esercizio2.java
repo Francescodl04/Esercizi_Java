@@ -28,15 +28,11 @@ public class Esercizio2
 					count++;
 				}
 			}
-			if(count == 2 || i == 1)
+			if(count == 2 | i == 1)
 			{
-				if(i != max - 1)
-				{
-					System.out.printf("%d, ", i);
-					continue;
-				}
-				System.out.printf("%d\n", i);
+				System.out.printf("%d ", i);
 			}
 		}
+		System.out.println();
 	}
 }
