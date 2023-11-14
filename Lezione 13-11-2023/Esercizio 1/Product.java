@@ -28,7 +28,7 @@ public class Product
 
     public void reducePrice(double rate)
     {
-        price -= price * (rate / 100);
+        price = price * (rate / 100);
     }
 
 }
