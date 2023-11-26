@@ -2,6 +2,7 @@
  * Francesco Di Lena
  * Esercizio 4 - Laboratorio di fondamenti di informatica
  * 21-11-2023
+ * Classe fabbrica di oggetti
 */
 
 public class Stringa
@@ -17,87 +18,214 @@ public class Stringa
         }
     }
 
-    public char[] getCharArray()
-    {
-        return string;
-    }
-
     public char charAt(int index)
     {
         return this.string[index];
     }
 
-    public int compareTo(Stringa s)
+    public int compareTo(Stringa s) throws NullPointerException
     {
-        for(int i = 0; i < this.length(); i++)
-        {
-            for(int j = 0; j < s.length(); j++)
-            {
-                if(this.string[i] == s.getCharArray()[j])
-                {
+        if(s == null) throw new NullPointerException();
 
-                }
+        for(int i = 0; i < this.length() && i < s.length(); i++)
+        {
+            if(this.charAt(i) == s.charAt(i))
+            {
+                if(i == this.length() - 1 && i == s.length() - 1) return 0;
+                continue;
             }
+            return this.charAt(i) - s.charAt(i);
         }
+
+        return this.length() - s.length(); //valore ritornato nel caso in cui la stringa s sia di lunghezza 0
     }
 
-    public Stringa concat(Stringa s)
+    public Stringa concat(Stringa s) throws NullPointerException
     {
-        int size = this.length() + s.length();
-        char [] tmp = new char[size];
-        
-    }
+        if(s == null) throw new NullPointerException();
 
-    public boolean endsWith(Stringa s)
-    {
+        int newSize = this.length() + s.length();
+        Stringa newString = new Stringa("");
 
-    }
-
-    public int indexOf(Stringa s)
-    {
-        int indexStart = 0, indexEnd = 0;
-        boolean hasIndexOf = false;
-        if(s.length() < this.length())
+        if (newSize == this.length())
         {
-            return -1;
+            newString.string = this.string;
+            return newString;
         }
-        for(int i = 0; i < this.length; i++)
+
+        char [] tmp = new char[newSize];
+        for(int i = 0; i < newSize; i++)
         {
-            for(int j = 0; j < s.length; j++)
+            if(i < this.length()) tmp[i] = this.charAt(i);
+            else 
             {
-                if(this.string[i] == s.getCharArray()[j])
+                for(int j = 0; j < s.length(); j++) 
                 {
-                    hasIndexOf = true;
-                    indexStart = i;
+                    tmp[i] = s.charAt(j);
                     i++;
                 }
-                else
-                {
-                    hasIndexOf = false;
-                    break;
-                }
             }
-            if(hasIndexOf)
+        }
+
+        newString.string = tmp;
+        return newString;
+    }
+
+    public boolean endsWith(Stringa s) throws NullPointerException
+    {
+        if(s == null) throw new NullPointerException();
+
+        if(s.length() > this.length()) return false;
+        int j = s.length() - 1;
+        for(int i = this.length() - 1; i > this.length() - s.length() - 1; i--)
+        {
+            if(this.charAt(i) != s.charAt(j))
             {
-                
+                return false;
+            }
+            j--;
+        }
+        return true;
+    }
+
+    public int indexOf(Stringa s) throws NullPointerException, IndexOutOfBoundsException
+    {
+        if(s == null) throw new NullPointerException();
+        if(s.length() > this.length()) return -1;
+
+        int indexStart = -1;
+        for(int i = 0; i < this.length(); i++)
+        {
+            if(this.charAt(i) == s.charAt(0))
+            {
+                indexStart = i;
+                for(int j = 1; j < s.length(); j++)
+                {
+                    i++;
+                    try
+                    {
+                        if(this.charAt(i) != s.charAt(j)) 
+                        {
+                            i = indexStart;
+                            indexStart = -1;
+                            break;
+                        }
+                    }
+                    catch(IndexOutOfBoundsException e)
+                    {
+                        indexStart = -1;
+                        break;
+                    }
+                }
+                if(indexStart != -1) break;
             }
         }
         return indexStart;
     }
 
-    public int indexOf(Stringa s, int fromIndex)
+    public int indexOf(Stringa s, int fromIndex) throws NullPointerException, IndexOutOfBoundsException
     {
-        
+        if(s == null) throw new NullPointerException();
+        if(s.length() > this.length()) return -1;
+
+        int indexStart = -1;
+        for(int i = fromIndex; i < this.length(); i++)
+        {
+            if(this.charAt(i) == s.charAt(0))
+            {
+                indexStart = i;
+                for(int j = 1; j < s.length(); j++)
+                {
+                    i++;
+                    try
+                    {
+                        if(this.charAt(i) != s.charAt(j)) 
+                        {
+                            i = indexStart;
+                            indexStart = -1;
+                            break;
+                        }
+                    }
+                    catch(IndexOutOfBoundsException e)
+                    {
+                        indexStart = -1;
+                        break;
+                    }
+                }
+                if(indexStart != -1) break;
+            }
+        }
+        return indexStart;
     }
 
-    public int lastIndexOf(Stringa s)
+    public int lastIndexOf(Stringa s) throws NullPointerException
     {
+        if(s == null) throw new NullPointerException();
 
+        if(s.length() == 0) return this.length();
+
+        int indexStart = -1;
+        for(int i = 0; i < this.length(); i++)
+        {
+            if(this.charAt(i) == s.charAt(0))
+            {
+                indexStart = i;
+                for(int j = 1; j < s.length(); j++)
+                {
+                    i++;
+                    try
+                    {
+                        if(this.charAt(i) != s.charAt(j)) 
+                        {
+                            i = indexStart;
+                            indexStart = -1;
+                            break;
+                        }
+                    }
+                    catch(IndexOutOfBoundsException e)
+                    {
+                        indexStart = -1;
+                        break;
+                    }
+                }
+            }
+        }
+        return indexStart;
     }
 
-    public int lastIndexOf(Stringa s, int fromIndex)
+    public int lastIndexOf(Stringa s, int fromIndex) throws NullPointerException
     {
+        if(s == null) throw new NullPointerException();
 
+        if(s.length() == 0) return this.length();
+
+        int indexStart = -1;
+        for(int i = fromIndex; i < this.length(); i++)
+        {
+            if(this.charAt(i) == s.charAt(0))
+            {
+                indexStart = i;
+                for(int j = 1; j < s.length(); j++)
+                {
+                    i++;
+                    try
+                    {
+                        if(this.charAt(i) != s.charAt(j)) 
+                        {
+                            i = indexStart;
+                            indexStart = -1;
+                            break;
+                        }
+                    }
+                    catch(IndexOutOfBoundsException e)
+                    {
+                        indexStart = -1;
+                        break;
+                    }
+                }
+            }
+        }
+        return indexStart;
     }
 
     public int length()
@@ -107,25 +235,27 @@ public class Stringa
 
     Stringa substring(int beginIndex)
     {
-        int size = this.string.length - beginIndex;
+        int size = this.length() - beginIndex;
         char [] tmp = new char[size];
-        int j = 0;
-        for(int i = beginIndex; i < size; i++)
+        for(int i = beginIndex, j = 0; i < this.length() && j < size; i++, j++)
         {
-            tmp[j] = this.string[i];
+            tmp[j] = this.charAt(i);
         }
-        return tmp;
+        Stringa newSubstring = new Stringa("");
+        newSubstring.string = tmp;
+        return newSubstring;
     }
 
     Stringa substring(int beginIndex, int endIndex)
     {
-        int size = endIndex - beginIndex;
+        int size = endIndex - beginIndex + 1;
         char [] tmp = new char[size];
-        int j = 0;
-        for(int i = beginIndex; i < endIndex; i++)
+        for(int i = beginIndex, j = 0; i < endIndex && j < size; i++, j++)
         {
-            tmp[j] = this.string[i];
+            tmp[j] = this.charAt(i);
         }
-        return tmp;
+        Stringa newSubstring = new Stringa("");
+        newSubstring.string = tmp;
+        return newSubstring;
     }
 }
