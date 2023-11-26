@@ -60,30 +60,50 @@ public class MyComplex
     //Divide questo numero complesso per il numero complesso z
     //divisione fra due complessi: z1/z2 = z1 *1/z2, per z2 != 0
     public MyComplex div(MyComplex z)
-    {return null;  //completare
+    {
+        if(z.realPart == 0 && z.imagPart == 0)
+        {
+            return null;
+        }
+        MyComplex quoziente = new MyComplex((this.realPart * inv().getRe() - this.imagPart * inv().getIm()), (this.realPart * inv().getIm() + inv().getRe() * this.imagPart ));
+        return quoziente;
     }
           
     //Calcola il coniugato di questo numero complesso
     //coniugato del complesso z:  z^= x - i*y
     public MyComplex conj()
-    {return null;  //completare
+    {
+        MyComplex coniugato = new MyComplex(this.realPart, -(this.imagPart));
+        return coniugato;
     }
           
     //Calcola l'inverso rispetto al prodotto di un numero complesso
     //inverso del complesso z: 1/z = x/(|z|*|z|) -i*y/(|z|*|z|), per z != 0
     public MyComplex inv()
-    {return null;  //completare
+    {
+        if(this.realPart == 0 && this.imagPart == 0)
+        {
+            return null;
+        }
+        MyComplex inverso = new MyComplex(this.realPart / Math.pow(mod(), 2), this.imagPart / Math.pow(mod(), 2));
+        return inverso;  
     }
 
     //Calcola il modulo di questo numero complesso
     //modulo del complesso z: |z| = sqrt( x*x + y*y).
     public double mod()
-    {return 0;  //completare
+    {
+        return Math.sqrt(Math.pow(this.realPart, 2) + Math.pow(this.imagPart, 2));
     }
            
     //Confronta con tolleranza due numeri complessi.
     public boolean approxEquals(MyComplex z)
-    {return false;  //completare
+    {
+        if(this.realPart == z.getRe() && this.imagPart == z.getIm())
+        {
+            return true;
+        }
+        return false;
     }
 
     //Crea una stringa che rappresenta questo numero complesso
