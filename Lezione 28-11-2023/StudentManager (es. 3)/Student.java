@@ -31,4 +31,9 @@ public class Student
 	{
 		return oralTest;
 	}
+
+	public String toString()
+	{
+		return "Cognome: " + surname + "\n" + "Voto scritto: " + writtenTest + "\n" + "Voto orale: " + oralTest;
+	}
 }

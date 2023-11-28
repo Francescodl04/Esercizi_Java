@@ -102,6 +102,6 @@ public class StudentManager
 
 	public static String toString(Student[] students, int index)
 	{
-		return "Cognome: " + students[index].getSurname() + "\n" + "Voto scritto: " + students[index].getWrittenTest() + "\n" + "Voto orale: " + students[index].getOralTest();
+		return students[index].toString() + "\nMedia finale: " + ((students[index].getWrittenTest() + students[index].getOralTest()) / 2);
 	}
 }
