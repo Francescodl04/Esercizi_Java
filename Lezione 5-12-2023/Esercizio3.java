@@ -17,19 +17,19 @@ public class Esercizio3
         // Prima esecuzione con l'algoritmo iterativo
         
         long iterativeTime = System.currentTimeMillis();
-        long iterativeResult = iterativeFibonacci(n);
+        long iterativeResult = iterativeFib(n);
         iterativeTime = System.currentTimeMillis() - iterativeTime;
         System.out.printf("Il risultato con algoritmo iterativo e' \"%d\", realizzato in un tempo di %d millisecondi.\n", iterativeResult, iterativeTime);
 
         // Seconda esecuzione con l'algoritmo ricorsivo
         
         long recursiveTime = System.currentTimeMillis();
-        long recursiveResult = recursiveFibonacci(n);
+        long recursiveResult = recursiveFib(n);
         recursiveTime = System.currentTimeMillis() - recursiveTime;
         System.out.printf("Il risultato con algoritmo ricorsivo e' \"%d\", realizzato in un tempo di %d millisecondi.\n", recursiveResult, recursiveTime);
     }
 
-    public static long iterativeFibonacci(int n) throws IllegalArgumentException
+    public static long iterativeFib(int n) throws IllegalArgumentException
     {
         if(n < 0) throw new IllegalArgumentException();
 
@@ -49,14 +49,17 @@ public class Esercizio3
         return current;
     }
 
-    public static long recursiveFibonacci(int n) throws IllegalArgumentException
+    public static long recursiveFib(int n) throws IllegalArgumentException
     {
         if(n < 0) throw new IllegalArgumentException();
         
         if(n == 0) return (long) 0;
 
-        if(n == 1 || n == 2) return (long) 1;
+        if(n == 1) return (long) 1;
 
-        return (long) 0;
+        long previous = recursiveFib(n - 2);
+        long current = recursiveFib(n - 1);
+        
+        return current + previous;
     }
 }
