@@ -65,8 +65,15 @@ public class CheckingAccount extends BankAccount
     // ------ metodi di Object sovrascritti ---------
     // ........... toString, equals .................
 
+    public String toString()
+    {
+        return "balance: " + super.getBalance() + " transactionCount: " + transactionCount;
+    }
 
-
+    public boolean equals(CheckingAccount c)
+    {
+        return (super.getBalance() == c.getBalance() && this.transactionCount == c.transactionCount);
+    }
 
     //-------- nuovi campi di esemplare e variabili statiche ----------------
     private int transactionCount;

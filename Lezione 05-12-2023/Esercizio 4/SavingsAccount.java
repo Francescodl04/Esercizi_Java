@@ -40,7 +40,15 @@ public class SavingsAccount extends BankAccount
     // ------ metodi di Object sovrascritti ---------
     // ........... toString, equals .................
 
+    public String toString()
+    {
+        return "balance: " + super.getBalance() + " interestRate: " + interestRate;
+    }
 
+    public boolean equals(SavingsAccount s)
+    {
+        return (super.getBalance() == s.getBalance() && this.interestRate == s.interestRate);
+    }
 
     //-------- nuovi campi di esemplare ----------------
 

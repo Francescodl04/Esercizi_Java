@@ -49,7 +49,15 @@ public class BankAccount
     // ------ metodi di Object da sovrascrivere ---------
     // ......... toString e equals ......................
 
+    public String toString()
+    {
+        return "balance: " + balance;
+    }
 
+    public boolean equals(BankAccount b)
+    {
+        return this.balance == b.balance;
+    }
 
     // -------- campi di esemplare ---------
 
