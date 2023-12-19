@@ -17,10 +17,10 @@ public class StringArrayAlgs
 
         while(from < to)
         {
-            midValuePosition = (int) (arrayLength / 2) + from; //6
-            midValue = array[midValuePosition]; //gamba
+            midValuePosition = (int) (arrayLength / 2) + from;
+            midValue = array[midValuePosition]; 
             
-            int comparisonResult = midValue.compareTo(searchedValue); //gamba.compareTo(elevatore) > 0
+            int comparisonResult = midValue.compareTo(searchedValue);
             if(comparisonResult == 0) return midValuePosition;
             else if (comparisonResult < 0) 
             {
