@@ -2,6 +2,7 @@
  * Francesco Di Lena
  * Esercizio 1 - laboratorio di fondamenti di informatica
  * 19-12-2023
+ * Nota: prima versione senza approfondimento (due pile temporanee)
 */
 
 import java.util.Scanner;
@@ -39,7 +40,7 @@ public class Esercizio1
 		}
 		while(true);
 		integerStack = selectionSort(integerStack);
-		System.out.println("Ecco ora gli elementi della pila ordinati in modo decrescente:");
+		System.out.println("Ecco ora gli elementi della pila ordinati in modo crescente:");
 		while(!integerStack.isEmpty())
 		{
 			System.out.println(integerStack.pop());
@@ -68,7 +69,11 @@ public class Esercizio1
 			orderedStack.push(min);
 			originalStack = remainingsStack;
 		}
-		return orderedStack;
+		while(!orderedStack.isEmpty())
+		{
+			originalStack.push(orderedStack.pop());
+		}
+		return originalStack;
 	}
 }
 
@@ -128,6 +133,15 @@ class ArrayStack implements Stack
 		
 		v[--vSize] = null;
 		return temp;
+	}
+
+	protected Object[] resize(Object[] oldArray, int newLength) throws IllegalArgumentException
+	{
+		if (oldArray.length >= newLength) throw new IllegalArgumentException();
+
+		Object[] newArray = new Object[newLength];
+		System.arraycopy(oldArray, 0, newArray, 0, oldArray.length);
+		return newArray;
 	}
 }
 
