@@ -7,39 +7,51 @@
 
 public class StringArrayAlgs
 {
-    public static void main(String[] args)
+    // Parte esercizio 5: metodo per la ricerca binaria
+    	
+    public static int iterativeBinarySearch(String[] array, String searchedValue)
     {
-        iterativeBinarySearch(new String[10]);
-    }
-
-    public static boolean iterativeBinarySearch(String[] array, String searchedValue)
-    {
-        int from = 0, to = array.length - 1, arrayLength = array.length, midValuePosition = (int) (arrayLength / 2);
-        String midValue = array[midValuePosition];
+        int from = 0, to = array.length - 1; //indici ricerca
+        int arrayLength = array.length, midValuePosition;
+        String midValue;
 
         while(from < to)
         {
-            midValuePosition = (int) (arrayLength / 2) + from;
+            midValuePosition = (int) (arrayLength / 2) + from; //6
+            midValue = array[midValuePosition]; //gamba
             
-            int comparisonResult = midValue.compareTo(searchedValue);
-
-            if(comparisonResult == 0) return true;
-            else if (comparisonResult < 0)
+            int comparisonResult = midValue.compareTo(searchedValue); //gamba.compareTo(elevatore) > 0
+            if(comparisonResult == 0) return midValuePosition;
+            else if (comparisonResult < 0) 
             {
-                from = midValuePosition + 1;
-                arrayLength = midValuePosition;
+            	from = midValuePosition + 1;
+            	arrayLength = to - from + 1;
             }
             else 
             {
-                to = midValuePosition;
-                arrayLength = arrayLength - (midValuePosition + 1);
+            	to = midValuePosition;
+            	arrayLength = to - from;
             }
         }
-        return false; //valore di ritorno predefinito in caso il valore cercato non sia stato trovato
+        return -1; //valore di ritorno predefinito in caso il valore cercato non sia stato trovato
     }
+    
+    //Parte esercizio 6: metodo per eseguire l'ordinamento
 
     public static String[] bubbleSort(String[] array)
     {
-        return null;
+    	for(int i = array.length - 1; i > 0; i--)
+    	{
+    		for(int j = i - 1; j >= 0 ; j--)
+    		{
+    			if(array[i].compareTo(array[j]) < 0)
+    			{
+    				String temp = array[i];
+    				array[i] = array[j];
+    				array[j] = temp;
+    			}
+    		}
+    	}
+        return array;
     }
 }
