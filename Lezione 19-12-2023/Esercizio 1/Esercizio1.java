@@ -39,7 +39,7 @@ public class Esercizio1
 			}
 		}
 		while(true);
-		integerStack = selectionSort(integerStack);
+		selectionSort(integerStack);
 		System.out.println("Ecco ora gli elementi della pila ordinati in modo crescente:");
 		while(!integerStack.isEmpty())
 		{
@@ -48,17 +48,17 @@ public class Esercizio1
 		console.close();
 	}
 	
-	public static Stack selectionSort(Stack originalStack)
+	public static void selectionSort(Stack originalStack)
 	{
 		Stack orderedStack = new ArrayStack();
 		
 		while(!originalStack.isEmpty())
 		{
 			Stack remainingsStack = new ArrayStack();
-			Integer min = (Integer) originalStack.pop();
+			Comparable min = (Comparable) originalStack.pop();
 			while(!originalStack.isEmpty())
 			{
-				Integer current = (Integer) originalStack.pop();
+				Comparable current = (Comparable) originalStack.pop();
 				if(current.compareTo(min) < 0)
 				{
 					remainingsStack.push(min);
@@ -73,7 +73,6 @@ public class Esercizio1
 		{
 			originalStack.push(orderedStack.pop());
 		}
-		return originalStack;
 	}
 }
 
