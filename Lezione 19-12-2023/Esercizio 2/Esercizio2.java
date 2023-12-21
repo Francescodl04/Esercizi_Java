@@ -41,9 +41,36 @@ public class Esercizio2
         }
     }
 
-    public static void deleteDuplicates(Queue originalQueue)
+    public static void deleteDuplicates(Queue queue)
     {
+        int counter = 0;
+        queue.enqueue("end");
 
+        do
+        {
+            queue.enqueue(queue.dequeue());
+            counter++;
+        }
+        while(!queue.getFront().equals("end"));
+        
+        queue.dequeue();
+        queue.enqueue("end"); 
+
+        while(counter > 0)
+        {
+            Object current = queue.dequeue();
+            queue.enqueue(current); 
+            do
+            {
+                Object temp = queue.dequeue();
+                if(!current.equals(temp)) queue.enqueue(temp);
+                
+                counter--;
+            }
+            while(!queue.getFront().equals("end"));
+            queue.dequeue(); //elimino il terminatore end
+            queue.enqueue("end"); 
+        }
     }
 }
 
@@ -75,7 +102,7 @@ class CircularArrayQueue implements Queue
 
     public boolean isEmpty()
     {
-        return (front == back && back == 0);
+        return (front == back);
     }
 
     public void makeEmpty()

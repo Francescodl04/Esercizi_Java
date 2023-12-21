@@ -69,6 +69,7 @@ public class Esercizio1
 			orderedStack.push(min);
 			originalStack = remainingsStack;
 		}
+		originalStack = orderedStack;
 		while(!orderedStack.isEmpty())
 		{
 			originalStack.push(orderedStack.pop());
