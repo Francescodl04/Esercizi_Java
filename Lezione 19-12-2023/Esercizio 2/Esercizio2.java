@@ -43,33 +43,41 @@ public class Esercizio2
 
     public static void deleteDuplicates(Queue queue)
     {
-        int counter = 0;
-        queue.enqueue("end");
+        String endFlag = "* QUEUE_END *"; //dichiaro il flag che mi permette di capire quando finisce la coda
+        int counter = 0; //numero elementi coda
+        queue.enqueue(endFlag);
 
-        do
+        if(queue.isEmpty()) return; //non eseguo nessuna operazione se la coda è vuota
+
+        do //conto gli elementi all'interno della coda
         {
             queue.enqueue(queue.dequeue());
             counter++;
         }
-        while(!queue.getFront().equals("end"));
-        
-        queue.dequeue();
-        queue.enqueue("end"); 
+        while(!queue.getFront().equals(endFlag));
 
-        while(counter > 0)
+        queue.dequeue(); //elimino il flag di fine coda
+
+        int examinedObjects = 0; //mi servirà per capire gli oggetti già esaminati nel ciclo successivo e che sicuramente non presenteranno doppioni
+
+        while(counter != examinedObjects) //ciclo per eliminare i doppioni: mi fermo solo quando avrò esaminato tutti gli elementi della coda
         {
-            Object current = queue.dequeue();
-            queue.enqueue(current); 
-            do
+            for(int i = 0; i < examinedObjects; i++) //ignoro gli eventuali oggetti già esaminati
+            {
+                queue.enqueue(queue.dequeue());
+            }
+            Object current = queue.dequeue(); //oggetto corrente da esaminare
+            queue.enqueue(current); //metto l'oggetto corrente alla fine della coda
+            examinedObjects++;
+
+            int duplicatesCounter = 0; //numero di duplicati da sottrarre alla variabile counter
+            for(int i = examinedObjects; i < counter; i++) //ciclo per trovare i doppioni: considero solamente gli elementi da analizzare e non quelli già analizzati precedentemente
             {
                 Object temp = queue.dequeue();
-                if(!current.equals(temp)) queue.enqueue(temp);
-                
-                counter--;
+                if(temp.equals(current)) duplicatesCounter++;
+                else queue.enqueue(temp);
             }
-            while(!queue.getFront().equals("end"));
-            queue.dequeue(); //elimino il terminatore end
-            queue.enqueue("end"); 
+            counter -= duplicatesCounter; 
         }
     }
 }
