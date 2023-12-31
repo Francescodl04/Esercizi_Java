@@ -26,8 +26,9 @@ public class Main
                 System.out.println("Non hai inserito un numero intero, riprova...");
                 continue;
             }
-            catch(NoSuchElementException e)
+            catch(NoSuchElementException e) //Se l'utente non inserisce nessun numero, allora esco direttamente dal programma
             {
+                System.out.println("Non e' possibile proseguire perche' non hai inserito alcun numero...");
                 System.exit(0);
             }
         }
