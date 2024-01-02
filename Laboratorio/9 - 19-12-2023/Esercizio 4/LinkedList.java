@@ -7,30 +7,6 @@
 
 import java.util.NoSuchElementException;
 
-interface Container
-{
-    boolean isEmpty();
-    void makeEmpty();
-}
-
-interface List extends Container
-{
-    void addFirst(Object obj);
-    void addLast(Object obj);
-    Object getFirst() throws EmptyLinkedListException;
-    Object getLast() throws EmptyLinkedListException;
-    Object removeFirst() throws EmptyLinkedListException;
-    Object removeLast() throws EmptyLinkedListException;
-}
-
-interface ListIterator
-{
-    Object next() throws NoSuchElementException;
-    boolean hasNext();
-    void add(Object obj);
-    void remove() throws IllegalStateException;
-}
-
 public class LinkedList implements List
 {
     private ListNode head, tail;
@@ -149,6 +125,63 @@ public class LinkedList implements List
             
             if(!hasNext()) LinkedList.this.tail = current;
         }
+    }
+
+    public int compareTo(List list2)
+    {
+        ListIterator iterator1 = this.getIterator();
+        ListIterator iterator2 = list2.getIterator();
+        int nWords1 = 0, nWords2 = 0;
+
+        //Prima fase: memorizzo quante parole hanno le due righe e le confronto
+
+        while(iterator1.hasNext())
+        {
+            iterator1.next();
+            nWords1++;
+        }
+        while(iterator2.hasNext())
+        {
+            iterator2.next();
+            nWords2++;
+        }
+
+        if(nWords1 == nWords2)
+        {
+
+            //Seconda fase: memorizzo i caratteri delle due righe e ne confronto il numero
+            char[] row1Characters = this.toString().toCharArray();
+            char[] row2Characters = list2.toString().toCharArray();
+
+            if(row1Characters.length == row2Characters.length)
+            {
+                //Terza fase: faccio un semplice confronto lessicografico delle due righe (intese come stringhe) con il metodo compareTo
+                return this.toString().compareTo(list2.toString());
+            }
+            else
+            {
+                if(row1Characters.length > row2Characters.length) return 1;
+
+                return -1;
+            }
+        }
+        else
+        {
+            if(nWords1 > nWords2) return 1;
+
+            return -1;
+        }
+    }
+
+    public String toString()
+    {
+        ListIterator iterator = getIterator();
+        String tmp = "";
+        while(iterator.hasNext())
+        {
+            tmp += " " + iterator.next();
+        }
+        return tmp;
     }
 }
 
