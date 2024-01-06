@@ -11,45 +11,66 @@ public class Main
     public static void main(String[] args)
     {
         Scanner in = new Scanner(System.in);
-        LinkedList rows = new LinkedList[100];
-        int nRows = 0;
+        LinkedList[] rows = new LinkedList[1];
+        int index = 0;
         do
         {
-            rows[nRows] = new LinkedList();
+            if(index == rows.length) rows = resize(rows, rows.length + 1);
+
+            rows[index] = new LinkedList();
             Scanner row = new Scanner(in.nextLine());
             while(row.hasNext())
             {
                 String tmp = row.next();
-                rows[nRows].addLast(tmp);
+                rows[index].addLast(tmp);
             }
-            if(nRows == 0)
+            if(index == 0)
             {
-                nRows++;
+                index++;
                 continue;
             }
-            nRows = insertionSort(rows, nRows);
+            index = insertionSort(rows, index);
         }
         while(in.hasNextLine());
         System.out.println("\nEcco le righe ordinate secondo l'ordine crescente prestabilito:");
-        for(int i = 0; i < nRows; i++)
+        for(int i = 0; i < index; i++)
         {
             System.out.printf("%d)%s\n", i + 1, rows[i]);
         }
     }
 
-    public static int insertionSort(LinkedList[] rows, int currentRowIndex)
+    private static int insertionSort(LinkedList[] rows, int currentRowIndex)
     {
-        for(int i = currentRowIndex; i > 0; i--)
+        if(findDuplicate(rows, rows[currentRowIndex])) return currentRowIndex;
+
+        //non faccio il ciclo superiore perché deve ordinare solamente la nuova riga inserita
+        for(int j = currentRowIndex; j > 0; j--)
         {
-            int comparisonResult = rows[currentRowIndex - 1].compareTo(rows[currentRowIndex]);
-            if(comparisonResult == 0) return currentRowIndex;
-            else if(comparisonResult > 0)
+            if(rows[j].compareTo(rows[j - 1]) < 0)
             {
-                LinkedList tmp = rows[currentRowIndex];
-                rows[currentRowIndex] = rows[currentRowIndex - 1];
-                rows[currentRowIndex - 1] = tmp;
+                LinkedList tmp = rows[j];
+                rows[j] = rows[j - 1];
+                rows[j - 1] = tmp;
             }
         }
         return currentRowIndex + 1;
+    }
+
+    private static boolean findDuplicate(LinkedList[] rows, LinkedList row)
+    {
+        for(int i = 0; i < rows.length - 1; i++) //non considero l'ultima riga, che chiaramente sarà uguale a quella di cui si vuole accertare l'esistenza o meno del duplicato
+        {
+            if(rows[i].equals(row)) return true;
+        }
+        return false;
+    }
+
+    private static LinkedList[] resize(LinkedList[] oldArray, int newLength) throws IllegalArgumentException
+    {
+        if(oldArray.length >= newLength) throw new IllegalArgumentException();
+
+        LinkedList[] newArray = new LinkedList[newLength];
+        System.arraycopy(oldArray, 0, newArray, 0, oldArray.length);
+        return newArray;
     }
 }

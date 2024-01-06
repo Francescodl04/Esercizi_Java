@@ -2,7 +2,7 @@
  * Francesco Di Lena
  * Esercizio 4 - laboratorio di fondamenti di informatica
  * 19-12-2023
- * Classe fabbrica di oggetti LinkedList
+ * Classe fabbrica di oggetti LinkedList, modificata oppurtamente per permettere il confronto tra stringhe come indicato nella consegna di esercizio
 */
 
 import java.util.NoSuchElementException;
@@ -171,6 +171,11 @@ public class LinkedList implements List
 
             return -1;
         }
+    }
+
+    public boolean equals(LinkedList list2)
+    {
+        return this.toString().equals(list2.toString());
     }
 
     public String toString()
