@@ -4,7 +4,8 @@
 
 import java.util.Scanner;
 import java.util.NoSuchElementException;
-import java.io.*;
+import java.io.FileReader;
+import java.io.IOException;
 
 // -------------- classe ArchivioRecensioniTester: da completare --------------
 public class ArchivioRecensioniTester
@@ -60,6 +61,36 @@ public class ArchivioRecensioniTester
       				archive.findAll(console.nextLine());
       				break;
       			case "R":
+                    System.out.println("Inserisci la recensione che vuoi eliminare (formato titolo film :: voto :: commento):");
+                    Scanner userText = new Scanner(console.nextLine());
+                    userText.useDelimiter(" :: ");
+                    String[] reviewToBeDeleted = new String[3];
+                    int i = 0;
+                    while(userText.hasNext())
+                    {
+                        reviewToBeDeleted[i] = userText.next();
+                        i++;
+                    }
+                    if(i < 3) 
+                    {
+                        System.out.println("Non hai inserito un numero di parametri corretti oppure non hai usato il delimitatore \" :: \", riprova...");
+                        continue;
+                    }
+                    try
+                    {
+                        archive.remove(reviewToBeDeleted[0], new Recensione(Integer.parseInt(reviewToBeDeleted[1]), reviewToBeDeleted[2]));
+                    System.out.println("Eliminazione effettuata con successo!");
+                    }
+                    catch(NumberFormatException ne)
+                    {
+                        System.out.println("Il voto non e' stato inserito in forma numerica, riprova...");
+                        continue;
+                    }
+                    catch(MultiMapItemNotFoundException me)
+                    {
+                        System.out.println("Elemento non trovato, riprova con termini diversi...");
+                        continue;
+                    }
       				break;
       			case "Q":
       				console.close();
