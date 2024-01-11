@@ -49,58 +49,77 @@ public class ArchivioRecensioniTester
       	Scanner console = new Scanner(System.in);
       	do
       	{
-      		System.out.print("Inserisci un comando (termina con Q):");
-      		switch(console.nextLine().toUpperCase())
-      		{
-      			case "P":
-      				System.out.println("\nEcco le recensioni contenute in archivio:");
-      				System.out.println(archive.toString());
-      				break;
-      			case "FA":
-      				System.out.print("Inserisci il nome del film:");
-      				archive.findAll(console.nextLine());
-      				break;
-      			case "R":
-                    System.out.println("Inserisci la recensione che vuoi eliminare (formato titolo film :: voto :: commento):");
-                    Scanner userText = new Scanner(console.nextLine());
-                    userText.useDelimiter(" :: ");
-                    String[] reviewToBeDeleted = new String[3];
-                    int i = 0;
-                    while(userText.hasNext())
-                    {
-                        reviewToBeDeleted[i] = userText.next();
-                        i++;
-                    }
-                    if(i < 3) 
-                    {
-                        System.out.println("Non hai inserito un numero di parametri corretti oppure non hai usato il delimitatore \" :: \", riprova...");
-                        continue;
-                    }
-                    try
-                    {
-                        archive.remove(reviewToBeDeleted[0], new Recensione(Integer.parseInt(reviewToBeDeleted[1]), reviewToBeDeleted[2]));
-                    System.out.println("Eliminazione effettuata con successo!");
-                    }
-                    catch(NumberFormatException ne)
-                    {
-                        System.out.println("Il voto non e' stato inserito in forma numerica, riprova...");
-                        continue;
-                    }
-                    catch(MultiMapItemNotFoundException me)
-                    {
-                        System.out.println("Elemento non trovato, riprova con termini diversi...");
-                        continue;
-                    }
-      				break;
-      			case "Q":
-      				console.close();
-      				System.out.println("\nUscita dal programma in corso...");
-      				System.exit(0);
-      				break;
-      			default:
-      				System.out.println("\nNon hai inserito un comando corretto, riprova...");
-      				continue;
-      		}
+      		System.out.print("\nInserisci un comando (termina con Q): ");
+            try
+            {
+      		    switch(console.nextLine().toUpperCase())
+      		    {
+      			    case "P":
+      				    System.out.println("\nEcco le recensioni contenute in archivio:");
+      				    System.out.println(archive.toString());
+      				    break;
+      			    case "FA":
+      				    System.out.print("Inserisci il nome del film: ");
+                        try
+                        {
+      				        Object[] reviews = archive.findAll(console.nextLine());
+                            System.out.printf("\nLa ricerca ha prodotto %d risultati:\n\n", reviews.length);
+                            for(Object review : reviews)
+                            {
+                                System.out.println(review);
+                            }
+                        }
+                        catch(MultiMapItemNotFoundException e)
+                        {
+                            System.out.println("Chiave ricercata non trovata, riprova con un altro termine di ricerca...");
+                        }
+      				    break;
+      			    case "R":
+                        System.out.print("Inserisci la recensione che vuoi eliminare (formato titolo film :: voto :: commento): ");
+                        Scanner userText = new Scanner(console.nextLine());
+                        userText.useDelimiter(" :: ");
+                        String[] reviewToBeDeleted = new String[3];
+                        int i = 0;
+                        while(userText.hasNext())
+                        {
+                            reviewToBeDeleted[i] = userText.next();
+                            i++;
+                        }
+                        if(i < 3) 
+                        {
+                            System.out.println("Non hai inserito un numero di parametri corretti oppure non hai usato il delimitatore \" :: \", riprova...");
+                            continue;
+                        }
+                        try
+                        {
+                            archive.remove(reviewToBeDeleted[0], new Recensione(Integer.parseInt(reviewToBeDeleted[1]), reviewToBeDeleted[2]));
+                            System.out.println("Eliminazione effettuata con successo!");
+                        }
+                        catch(NumberFormatException ne)
+                        {
+                            System.out.println("Il voto non e' stato inserito in forma numerica, riprova...");
+                            continue;
+                        }
+                        catch(MultiMapItemNotFoundException me)
+                        {
+                            System.out.println("Elemento non trovato, riprova con termini diversi...");
+                            continue;
+                        }
+      				    break;
+      			    case "Q":
+      				    console.close();
+      				    System.out.println("\nUscita dal programma in corso...");
+      				    System.exit(0);
+      				    break;
+      			    default:
+      				    System.out.println("\nNon hai inserito un comando corretto, riprova...");
+      				    continue;
+      		    }
+            }
+            catch(NoSuchElementException e)
+            {
+                break;
+            }
       	}
       	while(true);
     }
@@ -166,12 +185,24 @@ class ArchivioRecensioni implements MultiMap
     
     public void remove(Comparable key, Object value) throws MultiMapItemNotFoundException
     {
-    	
+    	int first = findFirst(key), last = findLast(key);
+        for(int i = first; i <= last; i++)
+        {
+            if(value.equals(movies[i].getValue()))
+            {
+                for(int j = i; j < vSize - 1; j++)
+                {
+                    movies[j] = movies[j + 1];
+                }
+                movies[--vSize] = null;
+                last--;
+            }
+        }
     }
 
     public Object find(Comparable key) throws MultiMapItemNotFoundException
     {
-    	int index = binarySearch(0, vSize, key);
+    	int index = binarySearch(0, vSize - 1, key);
     	
     	if (index == -1) throw new MultiMapItemNotFoundException(); // nel caso in cui non trovi l'elemento lancia l'eccezione
     	
@@ -180,21 +211,28 @@ class ArchivioRecensioni implements MultiMap
     
     public Object[] findAll(Comparable key) throws MultiMapItemNotFoundException
     {
-    	return null;
+        int first = findFirst(key), last = findLast(key);
+        Recensione[] reviews = new Recensione[last - first + 1];
+        for(int i = first, j = 0; i <= last && j < reviews.length; i++, j++)
+        {
+            reviews[j] = movies[i].getValue();
+        }
+    	return reviews;
     }
     
     private int binarySearch(int startIndex, int endIndex, Comparable key)
     {
-    	while(startIndex < endIndex)
+    	while(startIndex <= endIndex)
     	{
-    		int mid = midPosition(vSize), comparisonResult = movies[mid].getKey().compareTo((String) key);
-    		if(comparisonResult < 0)
+    		int mid = ((endIndex + startIndex) / 2);
+            int comparisonResult = key.compareTo(movies[mid].getKey());
+    		if(comparisonResult > 0) //continuo la ricerca a destra
     		{
     			startIndex = mid + 1;
     		}
-    		else if(comparisonResult < 0)
+    		else if(comparisonResult < 0) //continuo la ricerca a sinistra
     		{
-    			endIndex = mid;
+    			endIndex = mid - 1;
     		}
     		else //nel caso siano uguali
     		{
@@ -203,10 +241,31 @@ class ArchivioRecensioni implements MultiMap
     	}
     	return -1;
     }
-    
-    private int midPosition(int index)
+
+    private int findFirst(Comparable key) throws MultiMapItemNotFoundException
     {
-    	return index % 2;
+        int first = binarySearch(0, vSize - 1, key);
+        
+        if(first == -1) throw new MultiMapItemNotFoundException();
+
+        while(first > 0 && movies[first - 1].getKey().equals(key)) 
+        {
+            first--;
+        }
+        return first;
+    }
+
+    private int findLast(Comparable key) throws MultiMapItemNotFoundException
+    {
+        int last = binarySearch(0, vSize - 1, key);
+
+        if(last == -1) throw new MultiMapItemNotFoundException();
+
+        while(last < vSize - 1 && movies[last + 1].getKey().equals(key))
+        {
+            last++;
+        }
+        return last;
     }
     
     private Object[] resize(Object[] oldArray, int newLength) throws IllegalArgumentException
