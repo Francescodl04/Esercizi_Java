@@ -1,0 +1,11 @@
+leg : gamba, zampa
+arm : braccio, arma
+head : testa, capo
+finger : dito
+head : testa, capo, comandante
+hand : mano
+ear : orecchio
+eye : occhio, vista, centro
+foot : piede, base
+nail : unghia, chiodo
+fist : pugno
