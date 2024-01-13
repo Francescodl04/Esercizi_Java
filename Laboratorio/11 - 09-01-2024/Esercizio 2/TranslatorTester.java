@@ -15,7 +15,92 @@ public class TranslatorTester
 {   
     public static void main(String[] args)
     {
-        
+        System.out.println("Benvenuto nel programma");
+        Scanner console = new Scanner(System.in);
+        Translator translator = null;
+
+        if(args.length != 1)
+        {
+            System.out.println("Non hai inserito un numero corretto di argomenti, riprova...");
+            System.exit(0);
+        }
+
+        try
+        {
+            FileReader reader = new FileReader(args[0]);
+            Scanner file = new Scanner(reader);
+            translator = new Translator(file); //il costruttore si occuperà della chiusura dello scanner del file
+            reader.close();
+            System.out.println("Lettura del file in ingresso eseguita correttamente!");
+        }
+        catch(IOException io)
+        {
+            System.out.println("Si e` verificato un errore nell'apertura del file, riprova inserendo un percorso diverso...");
+            System.exit(1);
+        }
+        catch(NoSuchElementException nse)
+        {
+            System.out.println("Il file inserito come argomento non possiede un formato corretto, riprova inserendone un altro...");
+            System.exit(1);
+        }
+
+        do
+        {
+            System.out.print("\nInserisci ora la funzione alla quale desideri accedere: ");
+            switch(console.nextLine().toUpperCase()) //il menu non deve essere case sensitive
+            {
+                case "P":
+                    System.out.printf("\nEcco il dizionario completo:\n%s\n", translator.toString());
+                    break;
+                case "F":
+                    System.out.print("Inserisci la parola inglese che desideri ricercare: ");
+                    String word = console.nextLine();
+                    try
+                    {
+                        String[] results = (String[]) translator.find(word);
+                        if(results.length == 1) System.out.println("\nLa ricerca ha prodotto un risultato:");
+                        else System.out.printf("\nLa ricerca ha prodotto %d risultati:\n", results.length);
+                        for(int i = 0; i < results.length; i++)
+                        {
+                            System.out.printf("%d) %s\n", i + 1, results[i]);
+                        }
+                    }
+                    catch(MapItemNotFoundException minf)
+                    {
+                        System.out.println("\nLa ricerca ha prodotto zero risultati, riprova con un' altra chiave di ricerca...");
+                        continue;
+                    }
+                    break;
+                case "FA":
+                    System.out.print("Inserisci il prefisso della parola inglese che desideri ricercare: ");
+                    String prefix = console.nextLine();
+                    try
+                    {
+                        String[] results = translator.findStartsWith(prefix);
+                        if(results.length == 1) System.out.println("\nLa ricerca ha prodotto un risultato:");
+                        else System.out.printf("\nLa ricerca ha prodotto %d risultati:\n", results.length);
+                        for(int i = 0; i < results.length; i++)
+                        {
+                            System.out.printf("%d) %s\n", i + 1, results[i]);
+                        }
+                    }
+                    catch(MapItemNotFoundException minf)
+                    {
+                        System.out.println("\nLa ricerca ha prodotto zero risultati, riprova con un' altra chiave di ricerca...");
+                        continue;
+                    }
+                    break;
+                case "Q":
+                    System.out.println("Uscita dal programma in corso...");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Non hai inserito un comando corretto, riprova...");
+                    continue;
+            }
+        }
+        while(true);
+
     }
 }
 
@@ -47,13 +132,17 @@ class Translator implements StringMap
 {
     private WordPair[] translations;
     private int translationsSize;
-    private static final int ARRAY_DIM = 100;
+    private static final int ARRAY_DIM = 1;
 
-
-    public Translator(Scanner file)
+    public Translator()
     {
         translations = new WordPair[ARRAY_DIM];
         translationsSize = 0;
+    }
+
+    public Translator(Scanner file)
+    {
+        this();
         while(file.hasNextLine())
         {
             if(translationsSize == translations.length) translations = resize(translations, translations.length * 2);
@@ -64,6 +153,7 @@ class Translator implements StringMap
             String[] wordTranslations = row.next().split(", ");
             insert(englishWord, wordTranslations);
         }
+        file.close();
     }
     
     public boolean isEmpty() // true: contenitore vuoto; false: contenitore non vuoto
@@ -131,8 +221,16 @@ class Translator implements StringMap
     public String[] findStartsWith(String prefix) throws MapItemNotFoundException
     {
         int prefixLength = prefix.length();
+
+        int first = findFirstStartsWith(prefix), last = findLastStartsWith(prefix); //questi metodi si occupano di lanciare l'eccezione in caso di elemento non trovato
+
+        String[] results = new String[last - first + 1];
+        for(int i = first, j = 0; i <= last && j < results.length; i++, j++)
+        {
+            results[j] = translations[i].getWord();
+        }
         
-        return null;
+        return results;
     }
 
     
@@ -148,6 +246,15 @@ class Translator implements StringMap
 
     // metodi di utilità
 
+    private String[] resize(String[] oldArray, int newLength) throws IllegalArgumentException
+    {
+        if(oldArray.length >= newLength) throw new IllegalArgumentException();
+
+        String[] newArray = new String[newLength];
+        System.arraycopy(oldArray, 0, newArray, 0, oldArray.length);
+        return newArray;
+    }
+
     private WordPair[] resize(WordPair[] oldArray, int newLength) throws IllegalArgumentException
     {
         if(oldArray.length >= newLength) throw new IllegalArgumentException();
@@ -157,7 +264,9 @@ class Translator implements StringMap
         return newArray;
     }
 
-    private int binarySearch(int startIndex, int endIndex, Comparable word)
+    //creo due versioni dei metodi binarySearch:
+
+    private int binarySearch(int startIndex, int endIndex, Comparable word) // 1) mi permette di eseguire una normale ricerca binaria
     {
         while(startIndex <= endIndex)
         {
@@ -177,6 +286,58 @@ class Translator implements StringMap
             }
         }
         return -1;
+    }
+
+    private int binarySearch(int startIndex, int endIndex, String prefix, boolean prefixMode) // 2) mi permette di eseguire una ricerca con prefisso
+    {
+        if(!prefixMode) return binarySearch(startIndex, endIndex, prefix);
+
+        while(startIndex <= endIndex)
+        {
+            int mid = (startIndex + endIndex) / 2;
+            int comparisonResult = prefix.compareTo(translations[mid].getWord().substring(0, prefix.length()));
+            if(comparisonResult > 0) //continuo la ricerca a destra
+            {
+                startIndex += 1;
+            }
+            else if (comparisonResult < 0) //continuo la ricerca a sinistra
+            {
+                endIndex -= 1;
+            }
+            else //se sono uguali
+            {
+                return mid;
+            }
+        }
+        return -1;
+    }
+
+    private int findFirstStartsWith(String prefix) throws MapItemNotFoundException
+    {
+        int first = binarySearch(0, translationsSize - 1, prefix, true);
+
+        if(first == -1) throw new MapItemNotFoundException();
+
+        while(first > 0 && translations[first - 1].getWord().startsWith(prefix))
+        {
+            first--;
+        }
+
+        return first;
+    }
+
+    private int findLastStartsWith(String prefix) throws MapItemNotFoundException
+    {
+        int last = binarySearch(0, translationsSize - 1, prefix, true);
+
+        if(last == -1) throw new MapItemNotFoundException();
+
+        while(last < translationsSize - 1 && translations[last + 1].getWord().startsWith(prefix))
+        {
+            last++;
+        }
+
+        return last;
     }
 
     private void insertionSort(int index)
