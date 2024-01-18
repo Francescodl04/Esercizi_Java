@@ -246,15 +246,6 @@ class Translator implements StringMap
 
     // metodi di utilità
 
-    private String[] resize(String[] oldArray, int newLength) throws IllegalArgumentException
-    {
-        if(oldArray.length >= newLength) throw new IllegalArgumentException();
-
-        String[] newArray = new String[newLength];
-        System.arraycopy(oldArray, 0, newArray, 0, oldArray.length);
-        return newArray;
-    }
-
     private WordPair[] resize(WordPair[] oldArray, int newLength) throws IllegalArgumentException
     {
         if(oldArray.length >= newLength) throw new IllegalArgumentException();
@@ -274,11 +265,11 @@ class Translator implements StringMap
             int comparisonResult = word.compareTo(translations[mid].getWord());
             if(comparisonResult > 0) //continuo la ricerca a destra
             {
-                startIndex += 1;
+                startIndex = mid + 1;
             }
             else if (comparisonResult < 0) //continuo la ricerca a sinistra
             {
-                endIndex -= 1;
+                endIndex = mid - 1;
             }
             else //se sono uguali
             {
