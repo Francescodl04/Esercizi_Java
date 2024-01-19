@@ -1,0 +1,35 @@
+2559821    ;    Fibonacci     ;    ConiglioDi       ; P
+2569079    ;    Gauss         ;    CarlFriedrich    ; P
+2509098    ;    Godel         ;    Kurt
+2555567    ;    Chomsky       ;    Noam
+2533345    ;    Church        ;    Alonzo
+2511123    ;    DeMorgan      ;    Augustus         ; P
+2544779    ;    Euler         ;    Leonhard         ; P
+2547251    ;    Hilbert       ;    David
+2543626    ;    Huffman       ;    David
+2554356    ;    Jacquard      ;    Joseph
+2509876    ;    Kleene        ;    Stephen
+2559272    ;    Knuth         ;    Donald
+2577765    ;    Al-Khwarizmi  ;    Muhammad         ; P
+2566678    ;    Boole         ;    George
+2539851    ;    Venn          ;    John
+2504821    ;    Viterbi       ;    Andrew
+2529471    ;    Von-Neumann   ;    John             ; P
+2540981    ;    Voronoi       ;    Georgy
+2504983    ;    Whitehead     ;    Alfred
+2567281    ;    Wiener        ;    Norbert
+2534423    ;    Pascal        ;    Blaise
+2500981    ;    Peano         ;    Giuseppe
+2559091    ;    Post          ;    Emil
+2505981    ;    Shannon       ;    Claude           ; P
+2557391    ;    Turing        ;    Alan             ; P
+2512345    ;    Lovelace      ;    Ada              ; P
+2554321    ;    Markov        ;    Andrey
+2512038    ;    Of-Alexandria ;    Euclid           ; P
+2500098    ;    Dijkstra      ;    Edsger           ; P
+2564321    ;    Leibniz       ;    Gottfried        ; P
+2500098    ;    Bernoulli     ;    Jacob
+2577789    ;    Bernoulli     ;    Nicolaus
+2588890    ;    Bernoulli     ;    Nicolaus
+2599987    ;    Babbage       ;    Charles          ; P
+2599987    ;    Babbage       ;    Charles          ; P

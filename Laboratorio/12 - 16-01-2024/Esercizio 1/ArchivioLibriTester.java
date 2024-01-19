@@ -31,7 +31,10 @@ public class ArchivioLibriTester
             {
                 Scanner row = new Scanner(inputFile.nextLine());
                 archive.aggiungi(row.next(), row.next(), Integer.parseInt(row.next()));
+                row.close();
             }
+            reader.close();
+            inputFile.close();
         }
         catch(IOException io)
         {
@@ -99,5 +102,6 @@ public class ArchivioLibriTester
             }
         }
         while(true);
+        console.close();
     }
 }
