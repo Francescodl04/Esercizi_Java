@@ -2,6 +2,7 @@
  * Francesco Di Lena
  * Esercizio 1 - Laboratorio di fondamenti di informatica
  * 16-01-2024
+ * Classe fabbrica di oggetti ArchivioLibri
 */
 
 import java.util.NoSuchElementException;

@@ -2,6 +2,7 @@
  * Francesco Di Lena
  * Esercizio 1 - Laboratorio di fondamenti di informatica
  * 16-01-2024
+ * Classe fabbrica di oggetti Libro
 */
 
 public class Libro 
@@ -32,7 +33,7 @@ public class Libro
 
     public String toString () 
     { 
-   	    return "del libro " + titolo + " ci sono " + numero + "copie"; 
+   	    return "del libro " + titolo + " ci sono " + numero + " copie"; 
     }
 
 }//fine Libro
