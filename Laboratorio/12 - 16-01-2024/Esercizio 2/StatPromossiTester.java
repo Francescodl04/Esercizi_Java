@@ -24,6 +24,7 @@ public class StatPromossiTester
             Scanner first = new Scanner(new FileReader(console.nextLine()));
             System.out.print("Inserisci ora il percorso del secondo file: ");
             Scanner second = new Scanner(new FileReader(console.nextLine()));
+            console.close();
             while(first.hasNextLine())
             {
                 Scanner row = new Scanner(first.nextLine());
@@ -73,25 +74,38 @@ public class StatPromossiTester
 
         //Punto c. : calcolo la percentuale di promossi in entrambi i corsi
 
-        Set allStudentsUnionSet = allStudentsSet1.union(allStudentsSet2), promotedStudentsUnionSet = promotedStudentsSet1.union(promotedStudentsSet2);
-        double promotedPercentageUnionSet = ((double) promotedStudentsUnionSet.size()) / ((double) allStudentsUnionSet.size()) * 100;
-
-        //Punto d. : calcolo la percentuale di studenti promossi in almeno uno dei due corsi
-
         Set allStudentsIntersectionSet = allStudentsSet1.intersection(allStudentsSet2), promotedStudentsIntersectionSet = promotedStudentsSet1.intersection(promotedStudentsSet2);
         double promotedPercentageIntersectionSet = ((double) promotedStudentsIntersectionSet.size()) / ((double) allStudentsIntersectionSet.size()) * 100;
 
+        //Punto d. : calcolo la percentuale di studenti promossi in almeno uno dei due corsi
+
+        Set allStudentsUnionSet = allStudentsSet1.union(allStudentsSet2), promotedStudentsUnionSet = promotedStudentsSet1.union(promotedStudentsSet2);
+        double promotedPercentageUnionSet = ((double) promotedStudentsUnionSet.size()) / ((double) allStudentsUnionSet.size()) * 100;
+
         //Richiesta finale: stampo il contenuto di tutti gli insiemi e le statistiche 
 
-        System.out.printf("Questi sono tutti gli studenti del primo corso inserito:\n%s\n", allStudentsSet1.toString());
-        System.out.printf("Questi sono gli studenti promossi del primo corso inserito:\n%s\n", promotedStudentsSet1.toString());
-        System.out.printf("Questi sono tutti gli studenti del secondo corso inserito:\n%s\n", allStudentsSet2.toString());
-        System.out.printf("Questi sono gli studenti promossi del secondo corso inserito:\n%s\n", promotedStudentsSet2.toString());
+        //Stampa degli insiemi primari
+        System.out.printf("Questi sono tutti gli studenti del primo corso inserito (%d studenti contati):\n%s\n", allStudentsSet1.size(), allStudentsSet1.toString());
+        System.out.printf("Questi sono gli studenti promossi del primo corso inserito (%d studenti contati):\n%s\n", promotedStudentsSet1.size(), promotedStudentsSet1.toString());
+        System.out.printf("Questi sono tutti gli studenti del secondo corso inserito (%d studenti contati):\n%s\n", allStudentsSet2.size(), allStudentsSet2.toString());
+        System.out.printf("Questi sono gli studenti promossi del secondo corso inserito (%d studenti contati):\n%s\n", promotedStudentsSet2.size(), promotedStudentsSet2.toString());
+
+        //Stampa degli insiemi secondari (ottenuti con operazioni)
+        
+        //Punto c.
+        System.out.printf("Questi sono gli studenti che hanno partecipato a entrambi i corsi (%d studenti contati):\n%s\n", allStudentsIntersectionSet.size(), allStudentsIntersectionSet.toString());
+        System.out.printf("Questi sono gli studenti che sono stati promossi a entrambi i corsi (%d studenti contati):\n%s\n", promotedStudentsIntersectionSet.size(), promotedStudentsIntersectionSet.toString());
+
+        //Punto d.
+        System.out.printf("Questi sono gli studenti di entrambi i corsi (%d studenti contati):\n%s\n", allStudentsUnionSet.size(), allStudentsUnionSet.toString());
+        System.out.printf("Questi sono gli studenti che sono stati promossi ad almeno un esame (%d studenti contati):\n%s\n", promotedStudentsUnionSet.size(), promotedStudentsUnionSet.toString());
+
+        //Stampa risultati statistiche
         System.out.println("Ora i risultati delle statistiche sono i seguenti: ");
-        System.out.printf("Percentuale di promossi nel primo corso: %.2f\n", promotedPercentageSet1);
-        System.out.printf("Percentuale di promossi nel secondo corso: %.2f\n", promotedPercentageSet2);
-        System.out.printf("Percentuale di promossi in entrambi i corsi: %.2f\n", promotedPercentageUnionSet);
-        System.out.printf("Percentuale di promossi in almeno uno dei due corsi: %.2f\n", promotedPercentageIntersectionSet);
+        /*Stampa punto a. */ System.out.printf("Percentuale di promossi nel primo corso: %.2f %%\n", promotedPercentageSet1);
+        /*Stampa punto b. */ System.out.printf("Percentuale di promossi nel secondo corso: %.2f %%\n", promotedPercentageSet2);
+        /*Stampa punto c. */ System.out.printf("Percentuale di promossi in entrambi i corsi: %.2f %%\n", promotedPercentageIntersectionSet);
+        /*Stampa punto d. */ System.out.printf("Percentuale di promossi in almeno uno dei due corsi: %.2f %%\n", promotedPercentageUnionSet);
     }
 }
 
@@ -192,10 +206,24 @@ class Studenti implements Set
     public Set intersection(Set s)
     {
         Set intersectionSet = new Studenti();
-        Comparable[] s1 = this.toArray(), s2 = intersectionSet.toArray();
-        for(int i = 0; i < s1.length && i < s2.length; i++)
+        Comparable[] s1 = this.toArray(), s2 = s.toArray();
+        for(int i = 0, j = 0; i < s1.length; i++)
         {
+            //Eseguo un ciclo per determinare l'indice giusto dal quale partire per fare il confronto
+            //evitando così inutili accessi all'array
+            while(j < s2.length && s1[i].compareTo(s2[j]) > 0)
+            {
+                j++;
+            }
+
+            //Interrompo qui il ciclo e non attraverso una condizione nel for, perché altrimenti si rischierebbe l'eccezione di indice fuori dall'array
+            if(j == s2.length) break; 
             
+            if(s1[i].compareTo(s2[j]) == 0)
+            {
+                intersectionSet.add(s1[i]);
+                j++;
+            }
         }
         return intersectionSet;
     }
@@ -208,7 +236,44 @@ class Studenti implements Set
     */
     public Set union(Set s)
     {
-        return null;
+        Set unionSet = new Studenti();
+        Comparable[] s1 = this.toArray(), s2 = s.toArray();
+
+        /*
+         * Uso ora lo stesso algoritmo di fusione usato per il merge sort
+         * al fine di avere prestazioni O(n log n) e di mantenere l'ordinamento iniziale
+        */
+
+        int i = 0, j = 0;
+        while(i < s1.length && j < s2.length) //con questo ciclo metto in ordine ciò che è possibile
+        {
+            int comparisonResult = s1[i].compareTo(s2[j]);
+            if(comparisonResult < 0) //il primo elemento è minore del secondo
+            {
+                unionSet.add(s1[i++]);
+            }
+            else if(comparisonResult > 0) //il secondo elemento è minore del primo
+            {
+                unionSet.add(s2[j++]);
+            }
+            else //sono uguali
+            {
+                unionSet.add(s1[i++]); //aggiungo l'elemento in s1, non cambierebbe nulla se inserissi l'elemento di s2, purché...
+                j++; //... faccia l'incremento anche di j
+            }
+        }
+
+        //Con questi ultimi due cicli inserisco anche quegli elementi che rimangono nei due insiemi ma che non si possono confrontare con quelli dell'altro
+        while(i < this.size())
+        {
+            unionSet.add(s1[i++]);
+        }
+        while(j < s.size())
+        {
+            unionSet.add(s2[j++]);
+        }
+
+        return unionSet;
     }
 
     public String toString()
