@@ -81,6 +81,9 @@ public class StatPromossiTester
 
         Set allStudentsUnionSet = allStudentsSet1.union(allStudentsSet2), promotedStudentsUnionSet = promotedStudentsSet1.union(promotedStudentsSet2);
         double promotedPercentageUnionSet = ((double) promotedStudentsUnionSet.size()) / ((double) allStudentsUnionSet.size()) * 100;
+        
+        /** NOTA BENE: aggiunto per motivo indicato in riga 285 */ 
+        Studenti onlyCourseSet1 = (Studenti) allStudentsSet1.subtract(allStudentsSet2);  //trovo gli studenti iscritti solo al primo corso
 
         //Richiesta finale: stampo il contenuto di tutti gli insiemi e le statistiche 
 
@@ -89,6 +92,8 @@ public class StatPromossiTester
         System.out.printf("Questi sono gli studenti promossi del primo corso inserito (%d studenti contati):\n%s\n", promotedStudentsSet1.size(), promotedStudentsSet1.toString());
         System.out.printf("Questi sono tutti gli studenti del secondo corso inserito (%d studenti contati):\n%s\n", allStudentsSet2.size(), allStudentsSet2.toString());
         System.out.printf("Questi sono gli studenti promossi del secondo corso inserito (%d studenti contati):\n%s\n", promotedStudentsSet2.size(), promotedStudentsSet2.toString());
+        /** NOTA BENE: aggiunto per motivo indicato in riga 285 */
+        System.out.printf("Questi sono gli studenti iscritti solo al primo corso (%d studenti contati):\n%s\n", onlyCourseSet1.size(), onlyCourseSet1.toString());
 
         //Stampa degli insiemi secondari (ottenuti con operazioni)
         
@@ -274,6 +279,48 @@ class Studenti implements Set
         }
 
         return unionSet;
+    }
+
+    /**
+     * NOTA BENE: il seguente metodo, sebbene non richiesto dalla consegna, è stato aggiunto per scopi didattici
+    **/
+
+    public Set subtract(Set s)
+    {
+        Set subtractionSet = new Studenti();
+        Comparable[] s1 = this.toArray(), s2 = s.toArray();
+
+        int i, j; //Dichiaro queste variabili fuori dal ciclo perché dopo mi servirà la "i" (non posso dichiarare la j nel ciclo e la i no)
+        
+        /**
+         * Con questo ciclo faccio una prima parte dell'inserimento nell'insieme sottrazione:
+         * inserisco i valori non contenuti nell'insieme passato come argomento (s) finché non arrivo a
+         * valutare tutti gli elementi di quest'ultimo
+        **/
+
+        for(i = 0, j = 0; i < s1.length; i++)
+        {
+            //Se i valori dell'insieme 1 sono maggiori di quelli dell'insieme 2, allora "risparmia" calcoli
+            while(j < s2.length && s1[i].compareTo(s2[j]) > 0) j++;
+
+            //Evito l'ArrayIndexOutOfBoundsException con questa condizione
+            if(j == s2.length) break;
+
+            //Ora se i valori dell'insieme 1 d 2 sono diversi, vengono inseriti nel insieme sottrazione
+            if(s1[i].compareTo(s2[j]) != 0) subtractionSet.add(s1[i]);
+        }
+
+        /**
+         * Eseguo ora il ciclo finale che mi consente di inserire gli elementi rimanenti del primo insieme,
+         * che sappiamo con certezza non essere assolutamente contenuti nel secondo insieme
+         */
+
+        while(i < s1.length)
+        {
+            subtractionSet.add(s1[i++]);
+        }
+
+        return subtractionSet;
     }
 
     public String toString()
